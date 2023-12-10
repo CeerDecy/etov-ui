@@ -91,3 +91,11 @@ api/proto-go
 *.xlsx
 /cmd/ai-proxy/conf/erda-platforms.yml
 /cmd/ai-proxy/conf/providers.yml
+
+.next
+.next/
+.next/*
+
+.node_modules
+.node_modules/
+.node_modules/*
