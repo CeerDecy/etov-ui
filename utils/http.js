@@ -48,6 +48,7 @@ instance.interceptors.response.use(response => {
     if (error.response) {
         // 如401我就让用户返回登录页
         if (error.response.status === 401) {
+            // @ts-ignore
             this.props.history.push('/login');
         }
         // 比如返回报错你的页面可能会崩溃，你需要在它崩溃之前做一些操作的话，可以在这里
