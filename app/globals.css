@@ -74,3 +74,101 @@
     @apply bg-background text-foreground;
   }
 }
+
+.input{
+  width: 30vw;
+}
+
+.m-b-24 {
+  margin-bottom: 24px;
+}
+.m-t-24 {
+  margin-top: 24px;
+}
+.m-h-12 {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.content {
+  white-space: pre-line;
+  height:100% ;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.scoll {
+  height: 100%;
+}
+
+.w-80vw{
+  width: 60vw;
+}
+
+.topBar {
+  height: 7vh;
+  min-height: auto;
+  width: 100vw;
+  box-sizing: border-box;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.etov {
+  font-weight: bolder;
+  font-size: larger;
+}
+
+.leftBar {
+  width: 20vw;
+  min-width: auto;
+  height: 90.5vh;
+  margin: 10px;
+  padding: 24px;
+}
+
+.chat {
+  /*width: 80%;*/
+  height: 92vh;
+}
+.bottombar {
+  background-color:rgba(255 ,255,255,0.2);
+  left:50%;
+  transform:translate(-50%,0%);
+  bottom: 2%;
+  backdrop-filter: blur(10px);
+  position:absolute;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 80vw;
+}
+
+.m-b-10 {
+  margin-bottom: 10px;
+}
+
+.m-t-10 {
+  margin-top: 10px;
+}
+
+.m-h-10 {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.markdown{
+  width: 60vw;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+main {
+  position:absolute;
+}
+
+.msgcard {
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+}
