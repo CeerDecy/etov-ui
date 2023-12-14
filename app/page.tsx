@@ -21,9 +21,10 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import remarkGfm from 'remark-gfm'
+import { Textarea } from "@/components/ui/textarea"
 
-const GPT = "GPT3.5"
+
+const GPT = "Reviewer"
 const You = "You"
 
 type Message = {
@@ -60,7 +61,8 @@ export default function Home() {
         let history = [...contents]
         history.push({img: "https://github.com/CeerDecy.png", auth: You, content: inputValue})
         setContents(history)
-        fetchStream('/api/chat?content=' + inputValue, {method: 'get', headers: {'Content-Type': 'application/json'}},
+        let body = {'uid':'10001','content':'检查以下代码：'+inputValue}
+        fetchStream('/api/chat', {method: 'post', headers: {'Content-Type': 'application/json'},body:JSON.stringify(body)},
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -89,7 +91,7 @@ export default function Home() {
     function Hello() {
         let cache = ""
         let history = [...contents]
-        let content = "简单欢迎一下江苏第二师范学院的王子豪同学"
+        let content = "对我说：`请输入代码进行智能Review`"
         let body = {'uid':'10001','content':content}
         fetchStream('/api/chat', {method: 'post', headers: {'Content-Type': 'application/json'},body:JSON.stringify(body)},
             function (value: AllowSharedBufferSource | undefined) {
@@ -122,7 +124,7 @@ export default function Home() {
     return (
         <main className="">
             <div className={"topBar flex items-center justify-between"}>
-                <div className={"etov"}>etov</div>
+                <div className={"etov"}>Code Reviewer</div>
                 <Avatar>
                     <AvatarImage src="https://github.com/CeerDecy.png"/>
                     <AvatarFallback>CN</AvatarFallback>
@@ -159,10 +161,10 @@ export default function Home() {
             </div>
             <Card className={"bottombar flex flex-col items-center"}>
                 <div className="flex flex-row m-t-24 m-b-24">
-                    <Input type="text" className="inputDemo input " value={inputValue} onChange={e => {
+                    <Textarea placeholder="提供您的代码" className="inputDemo input " value={inputValue} onChange={e => {
                         setInputValue(e.target.value);
                     }}/>
-                    <Button className={"m-h-12"} onClick={Click}>提问</Button>
+                    <Button className={"m-h-12"} onClick={Click}>Code Review</Button>
                 </div>
             </Card>
 
