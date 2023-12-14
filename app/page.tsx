@@ -1,6 +1,6 @@
 'use client'
 import {useEffect, useRef, useState} from "react";
-import {GET} from "@/utils/http";
+import { useToast } from "@/components/ui/use-toast"
 import {fetchStream} from "@/utils/stream";
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
@@ -38,6 +38,8 @@ export default function Home() {
     const chatCardRef = useRef(null);
     const scrollRef = useRef(null);
     const initialized = useRef(false)
+    const { toast }  = useToast()
+    
     useEffect(() => {
         if (!initialized.current){
             initialized.current = true
@@ -87,8 +89,9 @@ export default function Home() {
     function Hello() {
         let cache = ""
         let history = [...contents]
-        let content = "欢迎一下江苏第二师范学院的同学"
-        fetchStream('/api/chat?content='+content, {method: 'get', headers: {'Content-Type': 'application/json'}},
+        let content = "简单欢迎一下江苏第二师范学院的王子豪同学"
+        let body = {'uid':'10001','content':content}
+        fetchStream('/api/chat', {method: 'post', headers: {'Content-Type': 'application/json'},body:JSON.stringify(body)},
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -102,10 +105,19 @@ export default function Home() {
             },
             function () {
                 console.log('done')
+                ShowToast("为什么不是GPT-4？",
+                    "由于openai官网的GPT-4目前处于收费状态，如果您想使用GPT-4，请在群里告知，我们需要评估GPT-4的需求量")
             }
         ).then(r => {
         })
         setInputValue("")
+    }
+    
+    function ShowToast(title:string,description:string) {
+        toast({
+            title: title,
+            description: description,
+        })
     }
     return (
         <main className="">

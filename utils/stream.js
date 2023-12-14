@@ -9,7 +9,6 @@ export const fetchStream =  async (url, options,onmessage,ondone) => {
             break; // 读取完毕
         } else {
             onmessage(value)
-            // console.log('message: ', new TextDecoder().decode(value));
         }
     }
 };
