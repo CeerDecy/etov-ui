@@ -1,6 +1,6 @@
 'use client'
 import {useEffect, useRef, useState} from "react";
-import {GET} from "@/utils/http";
+import {GET, POST} from "@/utils/http";
 import {fetchStream} from "@/utils/stream";
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
@@ -21,7 +21,8 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import remarkGfm from 'remark-gfm'
+// @ts-ignore
+import localStorage from "localStorage";
 
 const GPT = "GPT3.5"
 const You = "You"
@@ -41,7 +42,8 @@ export default function Home() {
     useEffect(() => {
         if (!initialized.current){
             initialized.current = true
-            Hello()
+            createChatId()
+            // Hello()
         }
     }, []);
     function scrollToBottom() {
@@ -53,12 +55,16 @@ export default function Home() {
         chatCardRef.current.childNodes[last].scrollIntoView({ block: "end" })
     }
 
-    async function Click() {
+    async function click() {
         let cache = ""
         let history = [...contents]
         history.push({img: "https://github.com/CeerDecy.png", auth: You, content: inputValue})
         setContents(history)
-        fetchStream('/api/chat?content=' + inputValue, {method: 'get', headers: {'Content-Type': 'application/json'}},
+        let body = {
+            chatId:localStorage.getItem("chatId"),
+            content: inputValue,
+        }
+        fetchStream('/api/chat', {method: 'post', headers: {'Content-Type': 'application/json'},body:JSON.stringify(body)},
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -84,11 +90,15 @@ export default function Home() {
         console.log("scrollRef ",scrollRef.current.childNodes)
     }
 
-    function Hello() {
+    function sayHello() {
         let cache = ""
         let history = [...contents]
         let content = "欢迎一下江苏第二师范学院的同学"
-        fetchStream('/api/chat?content='+content, {method: 'get', headers: {'Content-Type': 'application/json'}},
+        let body = {
+            chatId:localStorage.getItem("chatId"),
+            content: content,
+        }
+        fetchStream('/api/chat', {method: 'post', headers: {'Content-Type': 'application/json'},body:JSON.stringify(body)},
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -106,6 +116,15 @@ export default function Home() {
         ).then(r => {
         })
         setInputValue("")
+    }
+
+    function createChatId() {
+        POST("/chat/create/chatId",{}).then(res=>{
+            if (res.code == 200) {
+                localStorage.setItem("chatId",res.data.chatId)
+                sayHello()
+            }
+        })
     }
     return (
         <main className="">
@@ -150,7 +169,7 @@ export default function Home() {
                     <Input type="text" className="inputDemo input " value={inputValue} onChange={e => {
                         setInputValue(e.target.value);
                     }}/>
-                    <Button className={"m-h-12"} onClick={Click}>提问</Button>
+                    <Button className={"m-h-12"} onClick={click}>提问</Button>
                 </div>
             </Card>
 
