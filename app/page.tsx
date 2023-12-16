@@ -4,25 +4,20 @@ import {GET, POST} from "@/utils/http";
 import {fetchStream} from "@/utils/stream";
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
+import {TopBar} from "@/components/topbar/topbar"
 import {ScrollArea} from "@/components/ui/scroll-area"
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+    Card
 } from "@/components/ui/card"
 import Markdown from 'react-markdown'
-import rehypeHighlight from 'rehype-highlight'
 import {Separator} from "@/components/ui/separator"
 import {
     Avatar,
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-// @ts-ignore
-import localStorage from "localStorage";
+import {ChatBubbleIcon} from "@radix-ui/react-icons"
+import {GetCache, SetCache} from "@/utils/cache";
 
 const GPT = "GPT3.5"
 const You = "You"
@@ -40,19 +35,20 @@ export default function Home() {
     const scrollRef = useRef(null);
     const initialized = useRef(false)
     useEffect(() => {
-        if (!initialized.current){
+        if (!initialized.current) {
             initialized.current = true
             createChatId()
             // Hello()
         }
     }, []);
+
     function scrollToBottom() {
         // @ts-ignore
         // chatCardRef.current.scrollTop = chatCardRef.current.scrollHeight;
         // @ts-ignore
-        const last = chatCardRef.current.childNodes.length-1
+        const last = chatCardRef.current.childNodes.length - 1
         // @ts-ignore
-        chatCardRef.current.childNodes[last].scrollIntoView({ block: "end" })
+        chatCardRef.current.childNodes[last].scrollIntoView({block: "end"})
     }
 
     async function click() {
@@ -61,10 +57,14 @@ export default function Home() {
         history.push({img: "https://github.com/CeerDecy.png", auth: You, content: inputValue})
         setContents(history)
         let body = {
-            chatId:localStorage.getItem("chatId"),
+            chatId: GetCache("chatId") as string,
             content: inputValue,
         }
-        fetchStream('/api/chat', {method: 'post', headers: {'Content-Type': 'application/json'},body:JSON.stringify(body)},
+        fetchStream('/api/chat', {
+                method: 'post',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            },
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -87,7 +87,7 @@ export default function Home() {
         })
         setInputValue("")
         // @ts-ignore
-        console.log("scrollRef ",scrollRef.current.childNodes)
+        console.log("scrollRef ", scrollRef.current.childNodes)
     }
 
     function sayHello() {
@@ -95,10 +95,14 @@ export default function Home() {
         let history = [...contents]
         let content = "欢迎一下江苏第二师范学院的同学"
         let body = {
-            chatId:localStorage.getItem("chatId"),
+            chatId: GetCache("chatId") as string,
             content: content,
         }
-        fetchStream('/api/chat', {method: 'post', headers: {'Content-Type': 'application/json'},body:JSON.stringify(body)},
+        fetchStream('/api/chat', {
+                method: 'post',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            },
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -118,23 +122,25 @@ export default function Home() {
         setInputValue("")
     }
 
+    /**
+     * 请求创建ChatId
+     */
     function createChatId() {
-        POST("/chat/create/chatId",{}).then(res=>{
+        POST("/chat/create/chatId", {}).then(res => {
             if (res.code == 200) {
-                localStorage.setItem("chatId",res.data.chatId)
+                SetCache("chatId",res.data.chatId)
                 sayHello()
             }
         })
     }
+
+    function f() {
+        console.log("click")
+    }
+
     return (
         <main className="">
-            <div className={"topBar flex items-center justify-between"}>
-                <div className={"etov"}>etov</div>
-                <Avatar>
-                    <AvatarImage src="https://github.com/CeerDecy.png"/>
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-            </div>
+            <TopBar avatar="https://github.com/CeerDecy.png" openChats={f}></TopBar>
             <div className={"flex flex-col chat items-center"}>
                 <div className={"content w-80vw"}>
                     <ScrollArea className="scoll rounded-md" ref={scrollRef}>
@@ -158,7 +164,7 @@ export default function Home() {
                                     {/*{item.content}*/}
                                 </div>
                             })}
-                            <div style={{height:"20vh"}}></div>
+                            <div style={{height: "20vh"}}></div>
                         </div>
                     </ScrollArea>
                 </div>

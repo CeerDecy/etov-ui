@@ -110,7 +110,7 @@
   min-height: auto;
   width: 100vw;
   box-sizing: border-box;
-  padding-left: 24px;
+  padding-left: 12px;
   padding-right: 24px;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -152,6 +152,14 @@
   margin-top: 10px;
 }
 
+.m-l-10 {
+  margin-left: 10px;
+}
+
+.m-r-10 {
+  margin-right: 10px;
+}
+
 .m-h-10 {
   margin-right: 10px;
   margin-left: 10px;
@@ -171,4 +179,10 @@ main {
   padding-right: 10px;
   padding-left: 10px;
   padding-top: 10px;
+}
+
+.iconBtn {
+  width: auto;
+  height: auto;
+  padding: 8px;
 }
