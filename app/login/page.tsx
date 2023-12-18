@@ -1,42 +1,85 @@
-import { Metadata } from "next"
+"use client"
+import {Metadata} from "next"
 import Image from "next/image"
 import Link from "next/link"
 
-import { cn } from "@/lib/utils"
-import { UserAuthForm } from "@/components/user-auth-form/user-auth-form"
-import {buttonVariants} from "@/components/ui/button";
+import {cn} from "@/lib/utils"
+import {UserAuthForm} from "@/components/user-auth-form/user-auth-form"
+import {Button, buttonVariants} from "@/components/ui/button";
 
 import "./index.css"
-
-export const metadata: Metadata = {
-    title: "Authentication",
-    description: "Authentication forms built using the components.",
-}
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Icons} from "@/components/icons/icon";
+import * as React from "react";
+import {useEffect, useRef, useState} from "react";
+import axios from "axios";
+import {POST} from "@/utils/http";
+// import { useToast } from "@/components/ui/use-toast"
+// const { toast } = useToast()
+// export const metadata: Metadata = {
+//     title: "Authentication",
+//     description: "Authentication forms built using the components.",
+// }
 
 export default function AuthenticationPage() {
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [email, setEmail] = useState<string>("")
+    const initialized = useRef(false)
+
+    useEffect(() => {
+        if (!initialized.current) {
+            initialized.current = true
+            document.title = "Authentication"
+        }
+    }, []);
+    async function onSubmit(event: React.SyntheticEvent) {
+        event.preventDefault()
+        setIsLoading(true)
+
+        setTimeout(() => {
+            setIsLoading(false)
+        }, 3000)
+    }
+
+    async function onLoginContinue(event: React.SyntheticEvent) {
+        event.preventDefault()
+        let body = {
+            email : email
+        }
+        POST("/api/auth/HasRegistered", body).then(res => {
+            if (res.code === 200) {
+                if (res.data.flag) {
+
+                }
+            }
+        })
+    }
+
     return (
         <>
             <div className="md:hidden">
                 <Image
-                    src="/examples/authentication-light.png"
+                    src=""
                     width={1280}
                     height={843}
                     alt="Authentication"
                     className="block dark:hidden"
                 />
                 <Image
-                    src="/examples/authentication-dark.png"
+                    src=""
                     width={1280}
                     height={843}
                     alt="Authentication"
                     className="hidden dark:block"
                 />
             </div>
-            <div className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+            <div
+                className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 <Link
                     href="/examples/authentication"
                     className={cn(
-                        buttonVariants({ variant: "ghost" }),
+                        buttonVariants({variant: "ghost"}),
                         "absolute right-4 top-4 md:right-8 md:top-8"
                     )}
                 >
@@ -81,7 +124,54 @@ export default function AuthenticationPage() {
                                 请在下方输入您的电子邮件以创建账户
                             </p>
                         </div>
-                        <UserAuthForm />
+                        {/*<UserAuthForm />*/}
+                        <div className={cn("grid gap-6")}>
+                            <form onSubmit={onSubmit}>
+                                <div className="grid gap-2">
+                                    <div className="grid gap-1">
+                                        <Label className="sr-only" htmlFor="email">
+                                            Email
+                                        </Label>
+                                        <Input
+                                            id="email"
+                                            placeholder="etov@example.com"
+                                            type="email"
+                                            autoCapitalize="none"
+                                            autoComplete="email"
+                                            autoCorrect="off"
+                                            disabled={isLoading}
+                                            value={email}
+                                            onChange={e=>setEmail(e.target.value)}
+                                        />
+                                    </div>
+                                    <Button disabled={isLoading}>
+                                        {isLoading && (
+                                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
+                                        )}
+                                        使用邮箱登录
+                                    </Button>
+                                </div>
+                            </form>
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t"/>
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            或
+          </span>
+                                </div>
+                            </div>
+                            <Button variant="outline" type="button" disabled={isLoading}>
+                                {isLoading ? (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
+                                ) : (
+                                    <Icons.wechat className="mr-2 h-4 w-4"/>
+                                )}{" "}
+                                WeChat
+                            </Button>
+                        </div>
+                        {/*<UserAuthForm/>*/}
                         <p className="px-8 text-center text-sm text-muted-foreground">
                             点击继续，即表示您同意我们的{" "}
                             <Link

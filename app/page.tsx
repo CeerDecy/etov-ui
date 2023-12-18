@@ -93,7 +93,7 @@ export default function Home() {
     function sayHello() {
         let cache = ""
         let history = [...contents]
-        let content = "欢迎一下江苏第二师范学院的同学"
+        let content = "hello"
         let body = {
             chatId: GetCache("chatId") as string,
             content: content,
