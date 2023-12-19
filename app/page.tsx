@@ -1,10 +1,10 @@
 'use client'
-import {useEffect, useRef, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {GET, POST} from "@/utils/http";
 import {fetchStream} from "@/utils/stream";
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
-import {TopBar} from "@/components/topbar/topbar"
+import {TopBar, ChatItem, ChatItemProps} from "@/components/topbar/topbar"
 import {ScrollArea} from "@/components/ui/scroll-area"
 import {
     Card
@@ -21,7 +21,6 @@ import {GetCache, SetCache} from "@/utils/cache";
 
 const GPT = "GPT3.5"
 const You = "You"
-
 type Message = {
     img: string
     auth: string
@@ -31,14 +30,16 @@ type Message = {
 export default function Home() {
     const [contents, setContents] = useState(Array<Message>());
     const [inputValue, setInputValue] = useState("");
+    const [chatList, setChatList] = useState(Array<ChatItem>());
     const chatCardRef = useRef(null);
     const scrollRef = useRef(null);
     const initialized = useRef(false)
+
+    let currChat = ""
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
-            createChatId()
-            // Hello()
+            getChats()
         }
     }, []);
 
@@ -93,9 +94,10 @@ export default function Home() {
     function sayHello() {
         let cache = ""
         let history = [...contents]
-        let content = "欢迎一下江苏第二师范学院的同学"
+        let content = "你好"
+
         let body = {
-            chatId: GetCache("chatId") as string,
+            chatId: currChat,
             content: content,
         }
         fetchStream('/api/chat', {
@@ -122,13 +124,31 @@ export default function Home() {
         setInputValue("")
     }
 
+    const getChats = () => {
+        POST("/chat/get/chats", {}).then(res =>{
+            if (res.code == 200) {
+                if (res.data.chats.length == 0) {
+                    createChatId()
+                }
+            }
+        })
+    }
+
     /**
      * 请求创建ChatId
      */
     function createChatId() {
         POST("/chat/create/chatId", {}).then(res => {
             if (res.code == 200) {
-                SetCache("chatId",res.data.chatId)
+                console.log(res.data)
+                let lists = Array<ChatItem>();
+                lists.push({
+                    id:res.data.chat.id,
+                    chatId:res.data.chat.id,
+                    title:res.data.chat.title,
+                })
+                setChatList(lists)
+                currChat = res.data.chat.id
                 sayHello()
             }
         })
@@ -140,7 +160,11 @@ export default function Home() {
 
     return (
         <main className="">
-            <TopBar avatar="https://github.com/CeerDecy.png" openChats={f}></TopBar>
+            <TopBar
+                avatar="https://github.com/CeerDecy.png"
+                openChats={f}
+                chatList={chatList}
+                onChangeChat={(i)=>console.log("onChangeChat ==> ",i)}></TopBar>
             <div className={"flex flex-col chat items-center"}>
                 <div className={"content w-80vw"}>
                     <ScrollArea className="scoll rounded-md" ref={scrollRef}>
