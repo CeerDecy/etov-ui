@@ -1,31 +1,24 @@
 "use client"
-import {Metadata} from "next"
 import Image from "next/image"
 import Link from "next/link"
-
 import {cn} from "@/lib/utils"
-import {UserAuthForm} from "@/components/user-auth-form/user-auth-form"
 import {Button, buttonVariants} from "@/components/ui/button";
-
 import "./index.css"
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Icons} from "@/components/icons/icon";
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import axios from "axios";
 import {POST} from "@/utils/http";
-// import { useToast } from "@/components/ui/use-toast"
-// const { toast } = useToast()
-// export const metadata: Metadata = {
-//     title: "Authentication",
-//     description: "Authentication forms built using the components.",
-// }
+import {useToast} from "@/components/ui/use-toast"
 
 export default function AuthenticationPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [email, setEmail] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
+    const [step, setStep] = useState<number>(0)
     const initialized = useRef(false)
+    const {toast} = useToast()
 
     useEffect(() => {
         if (!initialized.current) {
@@ -33,10 +26,14 @@ export default function AuthenticationPage() {
             document.title = "Authentication"
         }
     }, []);
-    async function onSubmit(event: React.SyntheticEvent) {
+
+    async function onWeChatLogin(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
-
+        toast({
+            title: "无法登录",
+            description: "此功能尚未开放噢",
+        })
         setTimeout(() => {
             setIsLoading(false)
         }, 3000)
@@ -44,16 +41,42 @@ export default function AuthenticationPage() {
 
     async function onLoginContinue(event: React.SyntheticEvent) {
         event.preventDefault()
-        let body = {
-            email : email
-        }
-        POST("/api/auth/HasRegistered", body).then(res => {
-            if (res.code === 200) {
-                if (res.data.flag) {
-
-                }
+        if (step === 0){
+            if (email === "") {
+                toast({
+                    title: "无法登录",
+                    description: "当前邮箱地址不能为空",
+                })
+                return
             }
-        })
+            console.log(password)
+            let body = {
+                email: email
+            }
+            setIsLoading(true)
+            POST("/auth/HasRegistered", body).then(res => {
+                if (res.code === 200) {
+                    if (res.data.flag) {
+                        toast({
+                            title: "无法登录",
+                            description: "当前邮箱已被注册",
+                        })
+                    } else {
+                        toast({
+                            title: "无法登录",
+                            description: "当前邮箱未被注册",
+                        })
+                    }
+                    setStep(1)
+                }
+                setIsLoading(false)
+            })
+        }else {
+            toast({
+                title: "无法登录",
+                description: "当前密码不能为空",
+            })
+        }
     }
 
     return (
@@ -83,7 +106,7 @@ export default function AuthenticationPage() {
                         "absolute right-4 top-4 md:right-8 md:top-8"
                     )}
                 >
-                    登录
+                    注册
                 </Link>
                 <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
                     <div className="absolute inset-0 bg-zinc-900"/>
@@ -118,15 +141,15 @@ export default function AuthenticationPage() {
                     <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                         <div className="flex flex-col space-y-2 text-center">
                             <h1 className="text-2xl font-semibold tracking-tight">
-                                创建属于你的账户
+                                欢迎回来
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                请在下方输入您的电子邮件以创建账户
+                                请在下方输入您的电子邮件以登录账户
                             </p>
                         </div>
                         {/*<UserAuthForm />*/}
                         <div className={cn("grid gap-6")}>
-                            <form onSubmit={onSubmit}>
+                            <form onSubmit={onLoginContinue}>
                                 <div className="grid gap-2">
                                     <div className="grid gap-1">
                                         <Label className="sr-only" htmlFor="email">
@@ -141,14 +164,37 @@ export default function AuthenticationPage() {
                                             autoCorrect="off"
                                             disabled={isLoading}
                                             value={email}
-                                            onChange={e=>setEmail(e.target.value)}
+                                            onChange={e => setEmail(e.target.value)}
                                         />
                                     </div>
+                                    {
+                                        step == 1 && (
+                                            <div className="grid gap-1">
+                                                <Label className="sr-only" htmlFor="email">
+                                                    密码
+                                                </Label>
+                                                <Input
+                                                    id="pwd"
+                                                    placeholder="密码"
+                                                    type="password"
+                                                    autoCapitalize="none"
+                                                    autoComplete="email"
+                                                    autoCorrect="off"
+                                                    disabled={isLoading}
+                                                    value={password}
+                                                    onChange={e => setPassword(e.target.value)}
+                                                />
+                                            </div>
+                                        )
+                                    }
+
                                     <Button disabled={isLoading}>
                                         {isLoading && (
                                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                                         )}
-                                        使用邮箱登录
+                                        {
+                                            step == 0 ? (<div>继续</div>):(<div>使用邮箱登录</div>)
+                                        }
                                     </Button>
                                 </div>
                             </form>
@@ -162,7 +208,7 @@ export default function AuthenticationPage() {
           </span>
                                 </div>
                             </div>
-                            <Button variant="outline" type="button" disabled={isLoading}>
+                            <Button onClick={onWeChatLogin} variant="outline" type="button" disabled={isLoading}>
                                 {isLoading ? (
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                                 ) : (
@@ -173,7 +219,7 @@ export default function AuthenticationPage() {
                         </div>
                         {/*<UserAuthForm/>*/}
                         <p className="px-8 text-center text-sm text-muted-foreground">
-                            点击继续，即表示您同意我们的{" "}
+                            点击登录，即表示您同意我们的{" "}
                             <Link
                                 href="/terms"
                                 className="underline underline-offset-4 hover:text-primary"

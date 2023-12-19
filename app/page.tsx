@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/avatar"
 import {ChatBubbleIcon} from "@radix-ui/react-icons"
 import {GetCache, SetCache} from "@/utils/cache";
+import {useToast} from "@/components/ui/use-toast";
 
 const GPT = "GPT3.5"
 const You = "You"
@@ -34,6 +35,8 @@ export default function Home() {
     const chatCardRef = useRef(null);
     const scrollRef = useRef(null);
     const initialized = useRef(false)
+    const { toast } = useToast()
+
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
@@ -116,6 +119,10 @@ export default function Home() {
             },
             function () {
                 console.log('done')
+                toast({
+                    title: "Scheduled: Catch up",
+                    description: "Friday, February 10, 2023 at 5:57 PM",
+                })
             }
         ).then(r => {
         })
