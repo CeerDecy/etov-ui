@@ -58,7 +58,7 @@ export default function Home() {
         history.push({img: "https://github.com/CeerDecy.png", auth: You, content: inputValue})
         setContents(history)
         let body = {
-            chatId: GetCache("chatId") as string,
+            chatId: currChat,
             content: inputValue,
         }
         fetchStream('/api/chat', {
