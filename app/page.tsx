@@ -34,8 +34,9 @@ export default function Home() {
     const chatCardRef = useRef(null);
     const scrollRef = useRef(null);
     const initialized = useRef(false)
+    const currChat = useRef("")
 
-    let currChat = ""
+    // let currChat = ""
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
@@ -58,9 +59,10 @@ export default function Home() {
         history.push({img: "https://github.com/CeerDecy.png", auth: You, content: inputValue})
         setContents(history)
         let body = {
-            chatId: currChat,
+            chatId: currChat.current,
             content: inputValue,
         }
+        console.log(body)
         fetchStream('/api/chat', {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
@@ -97,9 +99,10 @@ export default function Home() {
         let content = "你好"
 
         let body = {
-            chatId: currChat,
+            chatId: currChat.current,
             content: content,
         }
+        console.log(body)
         fetchStream('/api/chat', {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
@@ -148,7 +151,7 @@ export default function Home() {
                     title:res.data.chat.title,
                 })
                 setChatList(lists)
-                currChat = res.data.chat.id
+                currChat.current = res.data.chat.id
                 sayHello()
             }
         })
