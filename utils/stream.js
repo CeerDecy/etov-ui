@@ -1,7 +1,10 @@
-export const fetchStream =  async (url, options,onmessage,ondone) => {
-    const response = await fetch(url, options);
+export const fetchStream =  async (url, body,onmessage,ondone) => {
+    const response = await fetch(url, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+    });
     const reader = response.body.getReader();
-
     while (true) {
         const { value, done } = await reader.read();
         if (done) {
@@ -9,7 +12,6 @@ export const fetchStream =  async (url, options,onmessage,ondone) => {
             break; // 读取完毕
         } else {
             onmessage(value)
-            // console.log('message: ', new TextDecoder().decode(value));
         }
     }
 };

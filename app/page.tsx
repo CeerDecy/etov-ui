@@ -63,11 +63,7 @@ export default function Home() {
             content: inputValue,
         }
         console.log(body)
-        fetchStream('/api/chat', {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(body)
-            },
+        fetchStream('/api/chat', body,
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -102,12 +98,7 @@ export default function Home() {
             chatId: currChat.current,
             content: content,
         }
-        console.log(body)
-        fetchStream('/api/chat', {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(body)
-            },
+        fetchStream('/api/chat', body,
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
