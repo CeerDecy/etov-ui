@@ -21,18 +21,17 @@ import {Card} from "@/components/ui/card";
 import "./index.css"
 import {Separator} from "@/components/ui/separator";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
-import {Label} from "@/components/ui/label"
-import {boolean} from "property-information/lib/util/types";
-import {any} from "prop-types";
-import {Dispatch, SetStateAction, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 
 type OpenChatsFunc = () => void
+type NewChat = () => void
 type OnChangeChat = (chat: ChatItem) => void
 type Props = {
     avatar: string,
     chatList: ChatItem[],
     openChats?: OpenChatsFunc,
     onChangeChat?: OnChangeChat
+    newChat?: NewChat
 };
 
 export type ChatItem = {
@@ -46,19 +45,23 @@ export type ChatItemProps = {
     setList: Dispatch<SetStateAction<ChatItem[]>>
 }
 
-export const TopBar: React.FC<Props> = ({avatar, openChats, chatList, onChangeChat}) => {
+export const TopBar: React.FC<Props> = ({avatar, openChats, chatList, onChangeChat, newChat}) => {
     const [hover, setHover] = useState(Array<boolean>)
     const [select, setSelect] = useState(Array<boolean>)
     for (let i = 0; i < chatList.length; i++) {
-        hover.push(false)
-        select.push(i == 0)
+        if (hover.length < chatList.length) {
+            hover.push(false)
+        }
+        if (select.length < chatList.length) {
+            select.push(i == 0)
+        }
     }
     const onHover = (index: number, bool: boolean) => {
         if (select[index]) {
             return
         }
         let temp = [...hover]
-        for (let i = 0; i < temp.length; i++) {
+        for (let i = 0; i < chatList.length; i++) {
             if (i == index) {
                 temp[i] = bool
                 continue
@@ -82,6 +85,19 @@ export const TopBar: React.FC<Props> = ({avatar, openChats, chatList, onChangeCh
         }
         setSelect(temp)
 
+    }
+
+    const onAddChat = () => {
+        let hoverTemp = [...hover]
+        hoverTemp.push(false)
+        setHover(hoverTemp)
+        let selectTemp = [...select]
+        selectTemp.push(false)
+        setSelect(selectTemp)
+        select.push(false)
+        if (newChat) {
+            newChat()
+        }
     }
 
     return <div className={"topBar flex items-center justify-between"}>
@@ -136,7 +152,7 @@ export const TopBar: React.FC<Props> = ({avatar, openChats, chatList, onChangeCh
                             })
                         }
                     </RadioGroup>
-                    <Button variant="ghost" className={"plus_btn"}>
+                    <Button variant="ghost" className={"plus_btn"} onClick={onAddChat}>
                         <PlusIcon color="#838383" className="h-4 w-4"/>
                     </Button>
                 </SheetContent>

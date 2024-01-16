@@ -66,17 +66,26 @@ export default function Home() {
         fetchStream('/api/chat', body,
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
-                cache = cache + val
-                let d = [...history]
+                try {
+                    let parse = JSON.parse(val);
+                    if (parse.code == 500) {
+                        cache = parse.msg
+                    }
+                }catch (e) {
+                    cache = cache + val
+                }finally {
+                    let d = [...history]
 
-                d.push({
-                    img: "",
-                    auth: GPT,
-                    content: cache,
-                })
-                setContents(d)
-                // 每次收到字符，滚动到最后
-                scrollToBottom()
+                    d.push({
+                        img: "",
+                        auth: GPT,
+                        content: cache,
+                    })
+                    setContents(d)
+                    // 每次收到字符，滚动到最后
+                    scrollToBottom()
+                }
+
             },
             function () {
                 console.log('done')
@@ -134,7 +143,6 @@ export default function Home() {
     function createChatId() {
         POST("/chat/create/chatId", {}).then(res => {
             if (res.code == 200) {
-                console.log(res.data)
                 let lists = Array<ChatItem>();
                 lists.push({
                     id:res.data.chat.id,
@@ -152,11 +160,28 @@ export default function Home() {
         console.log("click")
     }
 
+    const newChat = () => {
+        POST("/chat/create/chatId", {}).then(res => {
+            if (res.code == 200) {
+                let lists = [...chatList];
+                lists.push({
+                    id:res.data.chat.id,
+                    chatId:res.data.chat.id,
+                    title:res.data.chat.title,
+                })
+                setChatList(lists)
+                currChat.current = res.data.chat.id
+            }
+            console.log(chatList)
+        })
+    }
+
     return (
         <main className="">
             <TopBar
                 avatar="https://github.com/CeerDecy.png"
                 openChats={f}
+                newChat={newChat}
                 chatList={chatList}
                 onChangeChat={(i)=>console.log("onChangeChat ==> ",i)}></TopBar>
             <div className={"flex flex-col chat items-center"}>
