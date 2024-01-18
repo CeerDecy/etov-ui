@@ -4,7 +4,7 @@ import {GET, POST} from "@/utils/http";
 import {fetchStream} from "@/utils/stream";
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
-import {TopBar, ChatItem, ChatItemProps} from "@/components/topbar/topbar"
+import {TopBar} from "@/components/topbar/topbar"
 import {ScrollArea} from "@/components/ui/scroll-area"
 import {
     Card
@@ -16,8 +16,6 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import {ChatBubbleIcon} from "@radix-ui/react-icons"
-import {GetCache, SetCache} from "@/utils/cache";
 
 const GPT = "GPT3.5"
 const You = "You"
@@ -30,7 +28,6 @@ type Message = {
 export default function Home() {
     const [contents, setContents] = useState(Array<Message>());
     const [inputValue, setInputValue] = useState("");
-    const [chatList, setChatList] = useState(Array<ChatItem>());
     const chatCardRef = useRef(null);
     const scrollRef = useRef(null);
     const initialized = useRef(false)
@@ -128,62 +125,27 @@ export default function Home() {
     }
 
     const getChats = () => {
-        POST("/chat/get/chats", {}).then(res =>{
+        POST("/api/chat/get/chats", {}).then(res =>{
             if (res.code == 200) {
                 if (res.data.chats.length == 0) {
-                    createChatId()
+                    createChat()
                 }
             }
         })
     }
 
-    /**
-     * 请求创建ChatId
-     */
-    function createChatId() {
-        POST("/chat/create/chatId", {}).then(res => {
+    const createChat = () => {
+        POST("/api/chat/create/chatId",{}).then(res=>{
             if (res.code == 200) {
-                let lists = Array<ChatItem>();
-                lists.push({
-                    id:res.data.chat.id,
-                    chatId:res.data.chat.id,
-                    title:res.data.chat.title,
-                })
-                setChatList(lists)
                 currChat.current = res.data.chat.id
                 sayHello()
             }
         })
     }
 
-    function f() {
-        console.log("click")
-    }
-
-    const newChat = () => {
-        POST("/chat/create/chatId", {}).then(res => {
-            if (res.code == 200) {
-                let lists = [...chatList];
-                lists.push({
-                    id:res.data.chat.id,
-                    chatId:res.data.chat.id,
-                    title:res.data.chat.title,
-                })
-                setChatList(lists)
-                currChat.current = res.data.chat.id
-            }
-            console.log(chatList)
-        })
-    }
-
     return (
         <main className="">
-            <TopBar
-                avatar="https://github.com/CeerDecy.png"
-                openChats={f}
-                newChat={newChat}
-                chatList={chatList}
-                onChangeChat={(i)=>console.log("onChangeChat ==> ",i)}></TopBar>
+            <TopBar avatar="https://github.com/CeerDecy.png"></TopBar>
             <div className={"flex flex-col chat items-center"}>
                 <div className={"content w-80vw"}>
                     <ScrollArea className="scoll rounded-md" ref={scrollRef}>
