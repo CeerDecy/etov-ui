@@ -2,7 +2,7 @@ import axios from "axios";
 import cookie from 'react-cookies'
 
 //这是使用代理的路径，如果你想了解的话可以看我之前的文章或者~~问我
-let baseUrl = '/api'
+let baseUrl = process.env.SERVER
 
 // 创建axios实例，在这里可以设置请求的默认配置
 const instance = axios.create({

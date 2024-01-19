@@ -1,5 +1,5 @@
 'use client'
-import {useEffect, useRef, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {GET, POST} from "@/utils/http";
 import {fetchStream} from "@/utils/stream";
 import {Button} from "@/components/ui/button"
@@ -16,13 +16,9 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import {ChatBubbleIcon} from "@radix-ui/react-icons"
-import {GetCache, SetCache} from "@/utils/cache";
-import {useToast} from "@/components/ui/use-toast";
 
 const GPT = "GPT3.5"
 const You = "You"
-
 type Message = {
     img: string
     auth: string
@@ -35,13 +31,11 @@ export default function Home() {
     const chatCardRef = useRef(null);
     const scrollRef = useRef(null);
     const initialized = useRef(false)
-    const { toast } = useToast()
-
+    const currChat = useRef("")
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
-            createChatId()
-            // Hello()
+            getChats()
         }
     }, []);
 
@@ -60,27 +54,33 @@ export default function Home() {
         history.push({img: "https://github.com/CeerDecy.png", auth: You, content: inputValue})
         setContents(history)
         let body = {
-            chatId: GetCache("chatId") as string,
+            chatId: currChat.current,
             content: inputValue,
         }
-        fetchStream('/api/chat', {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(body)
-            },
+        console.log(body)
+        fetchStream('/api/chat', body,
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
-                cache = cache + val
-                let d = [...history]
+                try {
+                    let parse = JSON.parse(val);
+                    if (parse.code == 500) {
+                        cache = parse.msg
+                    }
+                } catch (e) {
+                    cache = cache + val
+                } finally {
+                    let d = [...history]
 
-                d.push({
-                    img: "",
-                    auth: GPT,
-                    content: cache,
-                })
-                setContents(d)
-                // 每次收到字符，滚动到最后
-                scrollToBottom()
+                    d.push({
+                        img: "",
+                        auth: GPT,
+                        content: cache,
+                    })
+                    setContents(d)
+                    // 每次收到字符，滚动到最后
+                    scrollToBottom()
+                }
+
             },
             function () {
                 console.log('done')
@@ -96,16 +96,12 @@ export default function Home() {
     function sayHello() {
         let cache = ""
         let history = [...contents]
-        let content = "hello"
+        let content = "你好"
         let body = {
-            chatId: GetCache("chatId") as string,
+            chatId: currChat.current,
             content: content,
         }
-        fetchStream('/api/chat', {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(body)
-            },
+        fetchStream('/api/chat', body,
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -119,35 +115,34 @@ export default function Home() {
             },
             function () {
                 console.log('done')
-                toast({
-                    title: "Scheduled: Catch up",
-                    description: "Friday, February 10, 2023 at 5:57 PM",
-                })
             }
         ).then(r => {
         })
         setInputValue("")
     }
 
-    /**
-     * 请求创建ChatId
-     */
-    function createChatId() {
-        POST("/chat/create/chatId", {}).then(res => {
+    const getChats = () => {
+        POST("/api/chat/get/chats", {}).then(res => {
             if (res.code == 200) {
-                SetCache("chatId",res.data.chatId)
+                if (res.data.chats.length == 0) {
+                    createChat()
+                }
+            }
+        })
+    }
+
+    const createChat = () => {
+        POST("/api/chat/create/chatId", {}).then(res => {
+            if (res.code == 200) {
+                currChat.current = res.data.chat.id
                 sayHello()
             }
         })
     }
 
-    function f() {
-        console.log("click")
-    }
-
     return (
         <main className="">
-            <TopBar avatar="https://github.com/CeerDecy.png" openChats={f}></TopBar>
+            <TopBar avatar="https://github.com/CeerDecy.png"></TopBar>
             <div className={"flex flex-col chat items-center"}>
                 <div className={"content w-80vw"}>
                     <ScrollArea className="scoll rounded-md" ref={scrollRef}>
