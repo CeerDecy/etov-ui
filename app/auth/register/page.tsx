@@ -11,14 +11,17 @@ import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import {POST} from "@/utils/http";
 import {useToast} from "@/components/ui/use-toast"
+import {Md5} from 'ts-md5';
+import {useRouter} from "next/navigation";
 
-export default function AuthenticationPage() {
+export default function UserRegisterPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [email, setEmail] = useState<string>("")
+    const [account, setAccount] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [step, setStep] = useState<number>(0)
     const initialized = useRef(false)
     const {toast} = useToast()
+    const router = useRouter()
 
     useEffect(() => {
         if (!initialized.current) {
@@ -41,8 +44,8 @@ export default function AuthenticationPage() {
 
     async function onLoginContinue(event: React.SyntheticEvent) {
         event.preventDefault()
-        if (step === 0){
-            if (email === "") {
+        if (step === 0) {
+            if (account === "") {
                 toast({
                     title: "无法登录",
                     description: "当前邮箱地址不能为空",
@@ -51,10 +54,10 @@ export default function AuthenticationPage() {
             }
             console.log(password)
             let body = {
-                email: email
+                email: account
             }
             setIsLoading(true)
-            POST("/auth/HasRegistered", body).then(res => {
+            POST("/api/auth/hasRegistered", body).then(res => {
                 if (res.code === 200) {
                     if (res.data.flag) {
                         toast({
@@ -62,19 +65,36 @@ export default function AuthenticationPage() {
                             description: "当前邮箱已被注册",
                         })
                     } else {
-                        toast({
-                            title: "无法登录",
-                            description: "当前邮箱未被注册",
-                        })
+                        setStep(1)
                     }
-                    setStep(1)
                 }
                 setIsLoading(false)
             })
-        }else {
-            toast({
-                title: "无法登录",
-                description: "当前密码不能为空",
+        } else {
+            if (password === "") {
+                toast({
+                    title: "无法登录",
+                    description: "当前密码不能为空",
+                })
+                return
+            }
+            const pwd = Md5.hashStr(password)
+            POST("/api/auth/register", {
+                account: account,
+                password: pwd
+            }).then(res => {
+                if (res.code == 200) {
+                    toast({
+                        title: "注册成功",
+                        description: "注册方式为" + res.data.mode,
+                    })
+                    router.push("/auth/login")
+                }else {
+                    toast({
+                        title: "注册失败",
+                        description: res.message,
+                    })
+                }
             })
         }
     }
@@ -98,15 +118,15 @@ export default function AuthenticationPage() {
                 />
             </div>
             <div
-                className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+                className="container relative hidden h-[100vh] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 <Link
-                    href="/examples/authentication"
+                    href="/login"
                     className={cn(
                         buttonVariants({variant: "ghost"}),
                         "absolute right-4 top-4 md:right-8 md:top-8"
                     )}
                 >
-                    注册
+                    登录
                 </Link>
                 <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
                     <div className="absolute inset-0 bg-zinc-900"/>
@@ -141,10 +161,10 @@ export default function AuthenticationPage() {
                     <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                         <div className="flex flex-col space-y-2 text-center">
                             <h1 className="text-2xl font-semibold tracking-tight">
-                                欢迎回来
+                                注册账户，属于你的etov
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                请在下方输入您的电子邮件以登录账户
+                                请在下方输入您的手机或电子邮件以注册账户
                             </p>
                         </div>
                         {/*<UserAuthForm />*/}
@@ -157,14 +177,14 @@ export default function AuthenticationPage() {
                                         </Label>
                                         <Input
                                             id="email"
-                                            placeholder="etov@example.com"
-                                            type="email"
+                                            placeholder="您的手机号或邮箱地址"
+                                            type="phone"
                                             autoCapitalize="none"
                                             autoComplete="email"
                                             autoCorrect="off"
                                             disabled={isLoading}
-                                            value={email}
-                                            onChange={e => setEmail(e.target.value)}
+                                            value={account}
+                                            onChange={e => setAccount(e.target.value)}
                                         />
                                     </div>
                                     {
@@ -193,7 +213,7 @@ export default function AuthenticationPage() {
                                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                                         )}
                                         {
-                                            step == 0 ? (<div>继续</div>):(<div>使用邮箱登录</div>)
+                                            step == 0 ? (<div>继续</div>) : (<div>注册</div>)
                                         }
                                     </Button>
                                 </div>
