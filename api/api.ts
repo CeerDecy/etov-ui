@@ -1,0 +1,11 @@
+export const APIS = {
+    // Auth
+    HAS_REGISTER_API : "/api/auth/hasRegistered",
+    REGISTER_API : "/api/auth/register",
+    LOGIN_API : "",
+
+    // Chat
+    CREATE_CHAT_API : "/api/chat/create/chatId",
+    GET_CHATS_API : "/api/chat/get/chats",
+    CHAT_API : "/api/chat",
+}

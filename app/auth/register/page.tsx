@@ -13,6 +13,7 @@ import {POST} from "@/utils/http";
 import {useToast} from "@/components/ui/use-toast"
 import {Md5} from 'ts-md5';
 import {useRouter} from "next/navigation";
+import {APIS} from "@/api/api";
 
 export default function UserRegisterPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -57,7 +58,7 @@ export default function UserRegisterPage() {
                 email: account
             }
             setIsLoading(true)
-            POST("/api/auth/hasRegistered", body).then(res => {
+            POST(APIS.HAS_REGISTER_API, body).then(res => {
                 if (res.code === 200) {
                     if (res.data.flag) {
                         toast({
@@ -79,7 +80,7 @@ export default function UserRegisterPage() {
                 return
             }
             const pwd = Md5.hashStr(password)
-            POST("/api/auth/register", {
+            POST(APIS.REGISTER_API, {
                 account: account,
                 password: pwd
             }).then(res => {

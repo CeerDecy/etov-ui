@@ -11,6 +11,7 @@ import {Button} from "@/components/ui/button";
 import {useEffect, useRef, useState} from "react";
 import {fetchStream} from "@/utils/stream";
 import {POST} from "@/utils/http";
+import {APIS} from "@/api/api";
 
 const GPT = "GPT3.5"
 const You = "You"
@@ -54,7 +55,7 @@ export default function Chat() {
             content: inputValue,
         }
         console.log(body)
-        fetchStream('/api/chat', body,
+        fetchStream(APIS.CHAT_API, body,
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 try {
@@ -97,7 +98,7 @@ export default function Chat() {
             chatId: currChat.current,
             content: content,
         }
-        fetchStream('/api/chat', body,
+        fetchStream(APIS.CHAT_API, body,
             function (value: AllowSharedBufferSource | undefined) {
                 const val = new TextDecoder().decode(value);
                 cache = cache + val
@@ -118,7 +119,7 @@ export default function Chat() {
     }
 
     const getChats = () => {
-        POST("/api/chat/get/chats", {}).then(res => {
+        POST(APIS.GET_CHATS_API, {}).then(res => {
             if (res.code == 200) {
                 if (res.data.chats.length == 0) {
                     createChat()
@@ -128,7 +129,7 @@ export default function Chat() {
     }
 
     const createChat = () => {
-        POST("/api/chat/create/chatId", {}).then(res => {
+        POST(APIS.CREATE_CHAT_API, {}).then(res => {
             if (res.code == 200) {
                 currChat.current = res.data.chat.id
                 sayHello()
