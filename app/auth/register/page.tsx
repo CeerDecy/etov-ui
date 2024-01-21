@@ -43,7 +43,7 @@ export default function UserRegisterPage() {
         }, 3000)
     }
 
-    async function onLoginContinue(event: React.SyntheticEvent) {
+    async function onContinue(event: React.SyntheticEvent) {
         event.preventDefault()
         if (step === 0) {
             if (account === "") {
@@ -93,7 +93,7 @@ export default function UserRegisterPage() {
                 }else {
                     toast({
                         title: "注册失败",
-                        description: res.message,
+                        description: res.msg,
                     })
                 }
             })
@@ -170,7 +170,7 @@ export default function UserRegisterPage() {
                         </div>
                         {/*<UserAuthForm />*/}
                         <div className={cn("grid gap-6")}>
-                            <form onSubmit={onLoginContinue}>
+                            <form onSubmit={onContinue}>
                                 <div className="grid gap-2">
                                     <div className="grid gap-1">
                                         <Label className="sr-only" htmlFor="email">
