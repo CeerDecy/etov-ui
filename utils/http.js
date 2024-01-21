@@ -1,5 +1,6 @@
 import axios from "axios";
-import cookie from 'react-cookies'
+import {useRouter} from "next/navigation";
+
 
 //这是使用代理的路径，如果你想了解的话可以看我之前的文章或者~~问我
 let baseUrl = process.env.SERVER
@@ -18,10 +19,10 @@ instance.defaults.headers.post['Content-Type'] = 'application/json';
 
 /** 添加请求拦截器 **/
 instance.interceptors.request.use(config => {
-    var token = cookie.load('token')//获取你登录时存储的token
+    let token = localStorage.getItem("Authorization")
     // 判断cookie有没有存储token，有的话加入到请求头里
     if (token) {
-        config.headers['token'] = token//在请求头中加入token
+        config.headers['Authorization'] = token//在请求头中加入token
     }
     // 如果还需要在请求头内添加其他内容可以自己添加 "[]" 内为自定义的字段名 "=" 后的内容为字段名对应的内容
     // config.headers['自定义键'] = '自定义内容'
