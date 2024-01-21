@@ -12,6 +12,8 @@ import {useEffect, useRef, useState} from "react";
 import {fetchStream} from "@/utils/stream";
 import {POST} from "@/utils/http";
 import {APIS} from "@/api/api";
+import {useToast} from "@/components/ui/use-toast";
+import {useRouter} from "next/navigation";
 
 const GPT = "GPT3.5"
 const You = "You"
@@ -29,6 +31,9 @@ export default function Chat() {
     const scrollRef = useRef(null);
     const initialized = useRef(false)
     const currChat = useRef("")
+    const router = useRouter()
+    const {toast} = useToast()
+
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
@@ -120,10 +125,17 @@ export default function Chat() {
 
     const getChats = () => {
         POST(APIS.GET_CHATS_API, {}).then(res => {
+            console.log(res)
             if (res.code == 200) {
                 if (res.data.chats.length == 0) {
                     createChat()
                 }
+            }else {
+                toast({
+                    title: "请求失败",
+                    description: res.msg,
+                })
+                router.push("/auth/login")
             }
         })
     }
@@ -133,6 +145,11 @@ export default function Chat() {
             if (res.code == 200) {
                 currChat.current = res.data.chat.id
                 sayHello()
+            }else {
+                toast({
+                    title: "请求失败",
+                    description: res.msg,
+                })
             }
         })
     }

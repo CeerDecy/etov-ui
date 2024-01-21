@@ -88,7 +88,12 @@ export default function AuthenticationPage() {
                 console.log(res)
                 if (res.code == 200) {
                     router.push('/')
-                }else {
+                    localStorage.setItem("Authorization", res.data.token)
+                    toast({
+                        title: "登录成功",
+                        description: "",
+                    })
+                } else {
                     toast({
                         title: "登录失败",
                         description: res.msg,
@@ -120,7 +125,7 @@ export default function AuthenticationPage() {
             <div
                 className="container relative hidden h-[100vh] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 <Link
-                    href="/register"
+                    href="/auth/register"
                     className={cn(
                         buttonVariants({variant: "ghost"}),
                         "absolute right-4 top-4 md:right-8 md:top-8"
@@ -182,7 +187,7 @@ export default function AuthenticationPage() {
                                             autoCapitalize="none"
                                             autoComplete="email"
                                             autoCorrect="off"
-                                            disabled={isLoading}
+                                            disabled={isLoading || step == 1}
                                             value={account}
                                             onChange={e => setAccount(e.target.value)}
                                         />
