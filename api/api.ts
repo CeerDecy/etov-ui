@@ -2,7 +2,7 @@ export const APIS = {
     // Auth
     HAS_REGISTER_API : "/api/auth/hasRegistered",
     REGISTER_API : "/api/auth/register",
-    LOGIN_API : "",
+    LOGIN_API : "/api/auth/login",
 
     // Chat
     CREATE_CHAT_API : "/api/chat/create/chatId",

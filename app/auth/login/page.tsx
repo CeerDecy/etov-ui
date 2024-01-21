@@ -11,15 +11,18 @@ import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import {POST} from "@/utils/http";
 import {useToast} from "@/components/ui/use-toast";
-import {useRouter}from "next/navigation";
+import {useRouter} from "next/navigation";
+import {APIS} from "@/api/api";
+import {Md5} from "ts-md5";
 
 export default function AuthenticationPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [email, setEmail] = useState<string>("")
+    const [account, setAccount] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [step, setStep] = useState<number>(0)
     const initialized = useRef(false)
     const {toast} = useToast()
+    const router = useRouter()
 
     useEffect(() => {
         if (!initialized.current) {
@@ -43,7 +46,7 @@ export default function AuthenticationPage() {
     async function onLoginContinue(event: React.SyntheticEvent) {
         event.preventDefault()
         if (step === 0) {
-            if (email === "") {
+            if (account === "") {
                 toast({
                     title: "无法登录",
                     description: "当前邮箱地址不能为空",
@@ -52,26 +55,46 @@ export default function AuthenticationPage() {
             }
             console.log(password)
             let body = {
-                email: email
+                email: account
             }
             setIsLoading(true)
-            POST("/api/auth/HasRegistered", body).then(res => {
+            POST(APIS.HAS_REGISTER_API, body).then(res => {
                 if (res.code === 200) {
                     if (res.data.flag) {
+                        setStep(1)
+                    } else {
                         toast({
                             title: "无法登录",
-                            description: "当前邮箱已被注册",
+                            description: "当前账户未注册",
                         })
-                    } else {
-                        setStep(1)
                     }
                 }
                 setIsLoading(false)
             })
         } else {
-            toast({
-                title: "无法登录",
-                description: "当前密码不能为空",
+            if (password === "") {
+                toast({
+                    title: "无法登录",
+                    description: "当前密码不能为空",
+                })
+                return
+            }
+            setIsLoading(true)
+            let body = {
+                account: account,
+                password: Md5.hashStr(password),
+            }
+            POST(APIS.LOGIN_API, body).then(res => {
+                console.log(res)
+                if (res.code == 200) {
+                    router.push('/')
+                }else {
+                    toast({
+                        title: "登录失败",
+                        description: res.msg,
+                    })
+                }
+                setIsLoading(false)
             })
         }
     }
@@ -95,7 +118,7 @@ export default function AuthenticationPage() {
                 />
             </div>
             <div
-                className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+                className="container relative hidden h-[100vh] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 <Link
                     href="/register"
                     className={cn(
@@ -160,8 +183,8 @@ export default function AuthenticationPage() {
                                             autoComplete="email"
                                             autoCorrect="off"
                                             disabled={isLoading}
-                                            value={email}
-                                            onChange={e => setEmail(e.target.value)}
+                                            value={account}
+                                            onChange={e => setAccount(e.target.value)}
                                         />
                                     </div>
                                     {
