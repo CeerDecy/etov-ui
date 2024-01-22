@@ -183,7 +183,6 @@ export default function Chat() {
                         </div>
                     </ScrollArea>
                 </div>
-
             </div>
             <Card className={"bottombar flex flex-col items-center"}>
                 <div className="flex flex-row m-t-24 m-b-24">
