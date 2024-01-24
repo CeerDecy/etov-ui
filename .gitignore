@@ -41,12 +41,12 @@ cmd/**/bin
 
 # for local debug
 /.env
-/.env.*
+/.env
 /conf/**/*.local.yaml
 internal/local/
 cmd/local
 conf/local
-.env*
+.env
 
 # generated files
 # openapi

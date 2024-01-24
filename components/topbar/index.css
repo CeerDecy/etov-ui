@@ -11,3 +11,11 @@
 .plus_btn {
     width: 100%;
 }
+
+.topbar-username {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+    white-space: nowrap;
+    max-width: 60px;
+}
