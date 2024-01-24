@@ -1,10 +1,10 @@
 import axios from "axios";
 import {useRouter} from "next/navigation";
 
-
 //这是使用代理的路径，如果你想了解的话可以看我之前的文章或者~~问我
-let baseUrl = process.env.SERVER
+const baseUrl = process.env.NEXT_PUBLIC_SERVER || "http://localhost"
 
+export const BaseUrl = baseUrl
 // 创建axios实例，在这里可以设置请求的默认配置
 const instance = axios.create({
     timeout: 10000, // 设置超时时间10s，如果10秒没有返回结果则中断请求，认为连接超时

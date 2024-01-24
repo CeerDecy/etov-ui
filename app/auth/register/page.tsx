@@ -147,7 +147,7 @@ export default function UserRegisterPage() {
                         welcome etovGPT
                     </div>
                     <div className={"relative z-20"}>
-                        <div className={"etov_bg"}>etov</div>
+                        <div className={"etov_bg action-hover"} onClick={()=>router.push("/")}>etov</div>
                     </div>
                     <div className="relative z-20 mt-auto">
                         <blockquote className="space-y-2">
