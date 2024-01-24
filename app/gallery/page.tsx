@@ -30,12 +30,35 @@ export default function Gallery() {
                 <div className={"flex flex-col items-center"}>
                     <div className={"content w-80vw"}>
                         <ScrollArea className="scoll rounded-md">
-                            <ToolsGalleryItem/>
-                            <ToolsGalleryItem/>
-                            <ToolsGalleryItem/>
-                            <ToolsGalleryItem/>
-                            <ToolsGalleryItem/>
-                            <ToolsGalleryItem/>
+                            <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-2"}>
+                                <ToolsGalleryItem
+                                    name={"ChatGPT"}
+                                    link={"/tools/chat"}
+                                    logo={"/api/static/chat3.5.png"}
+                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
+                                <ToolsGalleryItem
+                                    name={"ChatGPT"}
+                                    logo={"/api/static/chat.png"}
+                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
+                                <ToolsGalleryItem
+                                    name={"ChatGPT"}
+                                    logo={"/api/static/chat3.5.png"}
+                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
+                                <ToolsGalleryItem
+                                    name={"ChatGPT"}
+                                    logo={"/api/static/chat3.5.png"}
+                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
+                                <ToolsGalleryItem
+                                    name={"ChatGPT"}
+                                    logo={"/api/static/chat3.5.png"}
+                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
+                                <ToolsGalleryItem
+                                    name={"ChatGPT"}
+                                    logo={"/api/static/chat3.5.png"}
+                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
+
+                            </div>
+
                         </ScrollArea>
                     </div>
                 </div>

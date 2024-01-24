@@ -1,10 +1,35 @@
 "use client"
 
 import * as React from "react";
+import Image from "next/image";
+import {BaseUrl} from "@/utils/http";
+import "./index.css"
+import {useRouter} from "next/navigation";
 
-export const ToolsGalleryItem: React.FC = () => {
-    return <div className={"flex items-center justify-between"}>
-        Items
+type GalleryItemProps = {
+    logo: string,
+    name: string,
+    description: string,
+    link?: string
+}
+
+export const ToolsGalleryItem: React.FC<GalleryItemProps> = ({logo,name,description,link}) => {
+    const router = useRouter();
+    const onClick = () => {
+        console.log(link)
+        if (link !== ""){
+            router.push(""+link)
+        }
+    }
+
+    return <div onClick={onClick} className={"flex items-center item-container p-2 hover:bg-gray-200 rounded-md cursor-pointer"}>
+            <div className={"mr-2"}>
+                <Image className={"item-icon"} src={BaseUrl + logo} alt={""} width={55} height={55}/>
+            </div>
+            <div className={"flex flex-col"}>
+                <div className={"item-title singe-line"}>{name}</div>
+                <div className={"summary singe-line"}>{description}</div>
+            </div>
     </div>
 }
 ToolsGalleryItem.displayName = "ToolsGalleryItem";

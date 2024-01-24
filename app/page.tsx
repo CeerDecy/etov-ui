@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 export default function Home() {
     const router = useRouter()
-    router.push("/gallery")
+    // router.push("/gallery")
     return (
         <main className="">
             <TopBar avatar="https://github.com/CeerDecy.png"></TopBar>
