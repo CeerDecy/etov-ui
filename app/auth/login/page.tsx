@@ -151,10 +151,10 @@ export default function AuthenticationPage() {
                         welcome etovGPT
                     </div>
                     <div className={"relative z-20"}>
-                        <div className={"etov_bg"}>etov</div>
+                        <div className={"etov_bg action-hover"} onClick={() => router.push("/")}>etov</div>
                     </div>
                     <div className="relative z-20 mt-auto">
-                        <blockquote className="space-y-2">
+                    <blockquote className="space-y-2">
                             <p className="">
                                 &ldquo;Learning to use GPT can quickly improve your learning and productivity!&rdquo;
                             </p>

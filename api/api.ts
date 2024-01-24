@@ -8,4 +8,7 @@ export const APIS = {
     CREATE_CHAT_API : "/api/chat/create/chatId",
     GET_CHATS_API : "/api/chat/get/chats",
     CHAT_API : "/api/chat",
+
+    // User
+    GET_USER_INFO : "/api/user/info"
 }

@@ -187,3 +187,7 @@ main {
   height: auto;
   padding: 8px;
 }
+
+.action-hover{
+  cursor:pointer
+}
