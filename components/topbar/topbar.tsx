@@ -25,6 +25,7 @@ import {useEffect, useRef, useState} from "react";
 import {GET, BaseUrl} from "@/utils/http";
 import {APIS} from "@/api/api";
 import {useRouter} from "next/navigation";
+import {PersonIcon} from "@radix-ui/react-icons";
 
 type Props = {
     avatar?: string
@@ -92,7 +93,9 @@ export const TopBar: React.FC<Props> = ({avatar}) => {
                         {userInfo.nickName == ""? "":
                             <Avatar className={"action-hover"}>
                                 <AvatarImage src={BaseUrl + userInfo.avatar}/>
-                                <AvatarFallback>avatar</AvatarFallback>
+                                <AvatarFallback>
+                                    <PersonIcon/>
+                                </AvatarFallback>
                             </Avatar>
                         }
                     </DropdownMenuTrigger>
