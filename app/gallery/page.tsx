@@ -7,9 +7,38 @@ import {GitHubLogoIcon} from '@radix-ui/react-icons'
 import "./index.css"
 import {Button} from "@/components/ui/button";
 import {ToolsGalleryItem} from "@/components/tools-gallery-item/tools-gallery-item";
+import {useEffect, useRef, useState} from "react";
+import {GET} from "@/utils/http";
+import {APIS} from "@/api/api";
+
+type ToolInfo = {
+    name: string
+    description: string,
+    logo: string,
+    url: string,
+    disable: boolean,
+}
 
 export default function Gallery() {
+    const [tools, setTools] = useState(Array<ToolInfo>());
     const router = useRouter()
+    const initialized = useRef(false)
+
+    useEffect(() => {
+        if (!initialized.current) {
+            initialized.current = true
+            getTools()
+        }
+    }, []);
+
+    const getTools = () => {
+        GET(APIS.GET_PUBLIC_TOOLS,"").then(res=>{
+            console.log(res)
+            if (res.code === 200 ){
+                setTools(res.data)
+            }
+        })
+    }
     return (
         <main className="">
             <TopBar avatar="https://github.com/CeerDecy.png"></TopBar>
@@ -31,32 +60,18 @@ export default function Gallery() {
                     <div className={"content w-80vw"}>
                         <ScrollArea className="scoll rounded-md">
                             <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-2"}>
-                                <ToolsGalleryItem
-                                    name={"ChatGPT"}
-                                    link={"/tools/chat"}
-                                    logo={"/api/static/chat3.5.png"}
-                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
-                                <ToolsGalleryItem
-                                    name={"ChatGPT"}
-                                    logo={"/api/static/chat.png"}
-                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
-                                <ToolsGalleryItem
-                                    name={"ChatGPT"}
-                                    logo={"/api/static/chat3.5.png"}
-                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
-                                <ToolsGalleryItem
-                                    name={"ChatGPT"}
-                                    logo={"/api/static/chat3.5.png"}
-                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
-                                <ToolsGalleryItem
-                                    name={"ChatGPT"}
-                                    logo={"/api/static/chat3.5.png"}
-                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
-                                <ToolsGalleryItem
-                                    name={"ChatGPT"}
-                                    logo={"/api/static/chat3.5.png"}
-                                    description={"ChatGPT fsadkjfndjfkdjsnfdsfnsdkjf"}/>
-
+                                {tools.map(
+                                    (tool, index) => (
+                                        <ToolsGalleryItem
+                                            key={index}
+                                            name={tool.name}
+                                            link={tool.url}
+                                            logo={tool.logo}
+                                            description={tool.description}
+                                            disabled={tool.disable}
+                                        />
+                                    )
+                                )}
                             </div>
 
                         </ScrollArea>

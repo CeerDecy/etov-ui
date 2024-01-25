@@ -60,7 +60,6 @@ export const TopBar: React.FC<Props> = ({avatar}) => {
 
     const getUserInfo = () => {
         GET(APIS.GET_USER_INFO, {}).then(res => {
-            console.log(res)
             if (res.code === 200) {
                 setUserInfo(res.data)
             }

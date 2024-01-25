@@ -6,12 +6,7 @@ const nextConfig = {
                 protocol: 'http',
                 hostname: '127.0.0.1',
                 port: '',
-                pathname: '/api/static/chat3.5.png',
-            },{
-                protocol: 'http',
-                hostname: '127.0.0.1',
-                port: '',
-                pathname: '/api/static/chat.png',
+                pathname: '/api/static/*',
             },
         ],
     },
