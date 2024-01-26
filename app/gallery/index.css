@@ -1,0 +1,15 @@
+.title {
+    font-weight: bolder;
+    font-size: 48px;
+}
+.minor-title{
+    font-weight: bolder;
+    font-size: 32px;
+}
+.minor-content {
+    color: #b7b7b7;
+}
+
+.grid-container {
+    min-width: 80vh;
+}

@@ -10,5 +10,8 @@ export const APIS = {
     CHAT_API : "/api/chat",
 
     // User
-    GET_USER_INFO : "/api/user/info"
+    GET_USER_INFO : "/api/user/info",
+
+    // Tool
+    GET_PUBLIC_TOOLS:"/api/tool/get/public",
 }

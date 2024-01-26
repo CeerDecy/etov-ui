@@ -1,0 +1,28 @@
+.item-icon{
+    /*background-color: #f8f8f8;*/
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.item-container {
+    min-height: 60px;
+    min-width: 180px;
+}
+
+.item-title {
+    max-width: 100px;
+    font-weight: bolder;
+    font-size: 16px;
+}
+.summary {
+    max-width: 100px;
+    font-size: 12px;
+    color: #b7b7b7;
+}
+
+.singe-line {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+    white-space: nowrap;
+}

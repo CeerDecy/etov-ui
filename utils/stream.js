@@ -1,7 +1,11 @@
 export const fetchStream =  async (url, body,onmessage,ondone) => {
+    let token = localStorage.getItem("Authorization")
     const response = await fetch(url, {
         method: 'post',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
         body: JSON.stringify(body)
     });
     const reader = response.body.getReader();
