@@ -33,7 +33,6 @@ export default function Gallery() {
 
     const getTools = () => {
         GET(APIS.GET_PUBLIC_TOOLS,"").then(res=>{
-            console.log(res)
             if (res.code === 200 ){
                 setTools(res.data)
             }
@@ -73,7 +72,6 @@ export default function Gallery() {
                                     )
                                 )}
                             </div>
-
                         </ScrollArea>
                     </div>
                 </div>
