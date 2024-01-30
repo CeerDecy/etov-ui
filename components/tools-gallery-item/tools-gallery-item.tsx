@@ -23,7 +23,7 @@ export const ToolsGalleryItem: React.FC<GalleryItemProps> = ({logo,name,descript
         }
     }
 
-    return <div onClick={onClick} className={"flex items-center item-container p-2 hover:bg-gray-200 rounded-md cursor-pointer " + (disabled ? "opacity-50 cursor-not-allowed" : "")}>
+    return <div onClick={onClick} className={"flex items-center item-container p-2 hover:bg-gray-200 rounded-md " + (disabled ? " cursor-not-allowed opacity-50" : "cursor-pointer ")}>
             <div className={"mr-2"}>
                 <Image className={"item-icon"} src={BaseUrl + logo} alt={""} width={55} height={55}/>
             </div>
