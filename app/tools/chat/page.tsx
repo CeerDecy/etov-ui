@@ -4,20 +4,20 @@ import {TopBar} from "@/components/topbar/topbar";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Separator} from "@/components/ui/separator";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import Markdown from "react-markdown";
 import {Card} from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useEffect, useRef, useState} from "react";
 import {fetchStream} from "@/utils/stream";
-import {POST} from "@/utils/http";
+import {GET, POST} from "@/utils/http";
 import {APIS} from "@/api/api";
 import {useToast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
 import { Viewer } from '@bytemd/react'
 import 'bytemd/dist/index.css'
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
-const GPT = "GPT3.5"
+const GPT = "GPT"
 const You = "You"
 type Message = {
     img: string
@@ -25,23 +25,45 @@ type Message = {
     content: string
 }
 
+type Engine = {
+    id: number
+    name: string
+}
+
 
 export default function Chat() {
     const [contents, setContents] = useState(Array<Message>());
+    const [engines, setEngines] = useState(Array<Engine>)
     const [inputValue, setInputValue] = useState("");
     const chatCardRef = useRef(null);
     const scrollRef = useRef(null);
     const initialized = useRef(false)
     const currChat = useRef("")
     const router = useRouter()
+    const model = useRef("1")
     const {toast} = useToast()
 
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
-            getChats()
+            getSupportEngine()
         }
     }, []);
+
+    const getSupportEngine = () => {
+        GET(APIS.GET_SUPPORT_ENGINES, {}).then(res => {
+            if (res.code === 200) {
+                setEngines(res.data.platform)
+                getChats()
+            }else {
+                toast({
+                    title: "请求失败",
+                    description: res.msg,
+                })
+            }
+
+        })
+    }
 
     function scrollToBottom() {
         // @ts-ignore
@@ -60,6 +82,7 @@ export default function Chat() {
         let body = {
             chatId: currChat.current,
             content: inputValue,
+            engineId: model.current,
         }
         console.log(body)
         fetchStream(APIS.CHAT_API, body,
@@ -84,7 +107,6 @@ export default function Chat() {
                     // 每次收到字符，滚动到最后
                     scrollToBottom()
                 }
-
             },
             function () {
                 console.log('done')
@@ -104,6 +126,7 @@ export default function Chat() {
         let body = {
             chatId: currChat.current,
             content: content,
+            engineId: model.current,
         }
         fetchStream(APIS.CHAT_API, body,
             function (value: AllowSharedBufferSource | undefined) {
@@ -155,6 +178,11 @@ export default function Chat() {
             }
         })
     }
+
+    const modelChange = (val: string) => {
+        model.current = val
+    }
+
     return (
         <>
             <TopBar></TopBar>
@@ -189,6 +217,21 @@ export default function Chat() {
             </div>
             <Card className={"bottombar flex flex-col items-center"}>
                 <div className="flex flex-row m-t-24 m-b-24">
+                    <div className={"mr-2"}>
+                        <Select defaultValue={"1"} onValueChange={modelChange}>
+                            <SelectTrigger className="">
+                                <SelectValue placeholder="AI模型"/>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    {engines.map((engine, index) => {
+                                        return <SelectItem key={index}
+                                                           value={engine.id + ""}>{engine.name}</SelectItem>
+                                    })}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
                     <Input type="text" className="inputDemo input " value={inputValue} onChange={e => {
                         setInputValue(e.target.value);
                     }}/>
