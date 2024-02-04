@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn add @radix-ui/react-dropdown-menu
+  /usr/local/bin/node /usr/local/bin/yarn add @radix-ui/react-separator
 
 PATH: 
   /Users/ceerdecy/.npm/_npx/125ee17d583c4e03/node_modules/.bin:/Users/ceerdecy/Project/etov/etov-ui/node_modules/.bin:/Users/ceerdecy/Project/etov/node_modules/.bin:/Users/ceerdecy/Project/node_modules/.bin:/Users/ceerdecy/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/usr/local/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/Library/Frameworks/Python.framework/Versions/3.11/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/ceerdecy/Library/Application Support/JetBrains/Toolbox/scripts

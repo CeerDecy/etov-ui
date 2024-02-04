@@ -14,6 +14,8 @@ import {POST} from "@/utils/http";
 import {APIS} from "@/api/api";
 import {useToast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
+import { Viewer } from '@bytemd/react'
+import 'bytemd/dist/index.css'
 
 const GPT = "GPT3.5"
 const You = "You"
@@ -155,7 +157,7 @@ export default function Chat() {
     }
     return (
         <>
-            <TopBar avatar="https://github.com/CeerDecy.png"></TopBar>
+            <TopBar></TopBar>
             <div className={"flex flex-col chat items-center"}>
                 <div className={"content w-80vw"}>
                     <ScrollArea className="scoll rounded-md" ref={scrollRef}>
@@ -175,7 +177,8 @@ export default function Chat() {
                                             marginLeft: "10px"
                                         }}>{item.auth}</div>
                                     </div>
-                                    <Markdown className={"markdown m-t-10"} rehypePlugins={[]}>{item.content}</Markdown>
+                                    {/*<Markdown className={"markdown m-t-10"} rehypePlugins={[]}>{item.content}</Markdown>*/}
+                                    <Viewer value={item.content}/>
                                     {/*{item.content}*/}
                                 </div>
                             })}

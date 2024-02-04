@@ -191,3 +191,7 @@ main {
 .action-hover{
   cursor:pointer
 }
+
+.minor-content {
+  color: #acacb2;
+}

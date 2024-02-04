@@ -2,7 +2,9 @@ import type {Metadata} from 'next'
 import {Inter} from 'next/font/google'
 import './globals.css'
 import {Toaster} from "@/components/ui/toaster"
-import Head from "next/head";
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
+import {TopBar} from "@/components/topbar/topbar";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -19,11 +21,15 @@ export default function RootLayout({
     return (
         <html lang="en">
         <head>
+            <title>etov</title>
             <script async
                     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5812287911954412"
                     crossOrigin="anonymous"></script>
         </head>
         <body className={inter.className}>
+        <Button variant="link" className={"fixed bottom-0 right-0 minor-content"}>
+            <Link href={"https://beian.miit.gov.cn/"}>苏ICP备2024067504号</Link>
+        </Button>
         {children}
         <Toaster/>
         </body>
