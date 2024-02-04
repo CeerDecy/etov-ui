@@ -26,7 +26,7 @@ import {GET, BaseUrl} from "@/utils/http";
 import {APIS} from "@/api/api";
 import {useRouter} from "next/navigation";
 import {PersonIcon} from "@radix-ui/react-icons";
-import { Badge } from "@/components/ui/badge";
+import {Badge} from "@/components/ui/badge";
 
 type Props = {
     avatar?: string
@@ -75,24 +75,24 @@ export const TopBar: React.FC<Props> = ({avatar}) => {
     }
 
     return <div className={"topBar flex items-center justify-between"}>
-        <div className={"etov items-center flex flex-row"}>
+        <div className={"etov items-center flex flex-row cursor-pointer"} onClick={() => router.push("/")}>
             <div className={"m-l-10"}>etov</div>
-            <Badge className={"ml-1"} style={{fontSize:10,height:18}}>公测</Badge>
+            <Badge className={"ml-1"} style={{fontSize: 10, height: 18}}>测试</Badge>
         </div>
         <div className={"flex  items-center flex-row"}>
             <div>
                 <Button variant="link">
                     <div className={"topbar-username"}>
                         {userInfo.nickName == "" ?
-                            <div onClick={()=>router.push("/auth/login")}>登录</div>
-                            :<div>{userInfo.nickName}</div>}
+                            <div onClick={() => router.push("/auth/login")}>登录</div>
+                            : <div>{userInfo.nickName}</div>}
                     </div>
                 </Button>
             </div>
             <div>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        {userInfo.nickName == ""? "":
+                        {userInfo.nickName == "" ? "" :
                             <Avatar className={"action-hover"}>
                                 <AvatarImage src={BaseUrl + userInfo.avatar}/>
                                 <AvatarFallback>
