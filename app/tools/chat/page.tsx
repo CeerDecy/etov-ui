@@ -12,8 +12,8 @@ import {fetchStream} from "@/utils/stream";
 import {GET, POST} from "@/utils/http";
 import {APIS} from "@/api/api";
 import {useToast} from "@/components/ui/use-toast";
-import {useRouter} from "next/navigation";
-import { Viewer } from '@bytemd/react'
+import {useRouter, useSearchParams} from "next/navigation";
+import {Viewer} from '@bytemd/react'
 import 'bytemd/dist/index.css'
 import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
@@ -40,7 +40,8 @@ export default function Chat() {
     const initialized = useRef(false)
     const currChat = useRef("")
     const router = useRouter()
-    const model = useRef("1")
+    const search = useSearchParams()
+    const model = useRef(search.get("model") as string)
     const {toast} = useToast()
 
     useEffect(() => {
@@ -55,7 +56,7 @@ export default function Chat() {
             if (res.code === 200) {
                 setEngines(res.data.platform)
                 getChats()
-            }else {
+            } else {
                 toast({
                     title: "请求失败",
                     description: res.msg,
@@ -155,7 +156,7 @@ export default function Chat() {
                 if (res.data.chats.length == 0) {
                     createChat()
                 }
-            }else {
+            } else {
                 toast({
                     title: "请求失败",
                     description: res.msg,
@@ -170,7 +171,7 @@ export default function Chat() {
             if (res.code == 200) {
                 currChat.current = res.data.chat.id
                 sayHello()
-            }else {
+            } else {
                 toast({
                     title: "请求失败",
                     description: res.msg,
@@ -218,7 +219,7 @@ export default function Chat() {
             <Card className={"bottombar flex flex-col items-center"}>
                 <div className="flex flex-row m-t-24 m-b-24">
                     <div className={"mr-2"}>
-                        <Select defaultValue={"1"} onValueChange={modelChange}>
+                        <Select defaultValue={model.current} onValueChange={modelChange}>
                             <SelectTrigger className="">
                                 <SelectValue placeholder="AI模型"/>
                             </SelectTrigger>

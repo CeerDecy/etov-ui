@@ -16,6 +16,7 @@ type ToolInfo = {
     description: string,
     logo: string,
     url: string,
+    params: string,
     disable: boolean,
 }
 
@@ -65,6 +66,7 @@ export default function Gallery() {
                                             key={index}
                                             name={tool.name}
                                             link={tool.url}
+                                            params={tool.params}
                                             logo={tool.logo}
                                             description={tool.description}
                                             disabled={tool.disable}

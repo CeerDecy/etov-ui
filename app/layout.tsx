@@ -27,9 +27,6 @@ export default function RootLayout({
                     crossOrigin="anonymous"></script>
         </head>
         <body className={inter.className}>
-        <Button variant="link" className={"fixed bottom-0 right-0 minor-content"}>
-            <Link href={"https://beian.miit.gov.cn/"}>苏ICP备2024067504号</Link>
-        </Button>
         {children}
         <Toaster/>
         </body>
