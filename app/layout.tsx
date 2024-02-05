@@ -5,6 +5,7 @@ import {Toaster} from "@/components/ui/toaster"
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {TopBar} from "@/components/topbar/topbar";
+import Script from "next/script";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -21,6 +22,10 @@ export default function RootLayout({
     return (
         <html lang="en">
         <head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-KH6HZW4TYJ"></script>
+            <Script id={"analytics"}>
+                {"window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-KH6HZW4TYJ');"}
+            </Script>
             <title>etov</title>
             <script async
                     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5812287911954412"
