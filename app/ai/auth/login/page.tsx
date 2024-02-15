@@ -10,12 +10,12 @@ import {Icons} from "@/components/icons/icon";
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import {POST} from "@/utils/http";
-import {useToast} from "@/components/ui/use-toast"
-import {Md5} from 'ts-md5';
+import {useToast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
 import {APIS} from "@/api/api";
+import {Md5} from "ts-md5";
 
-export default function UserRegisterPage() {
+export default function AuthenticationPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [account, setAccount] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -43,7 +43,7 @@ export default function UserRegisterPage() {
         }, 3000)
     }
 
-    async function onContinue(event: React.SyntheticEvent) {
+    async function onLoginContinue(event: React.SyntheticEvent) {
         event.preventDefault()
         if (step === 0) {
             if (account === "") {
@@ -61,12 +61,12 @@ export default function UserRegisterPage() {
             POST(APIS.HAS_REGISTER_API, body).then(res => {
                 if (res.code === 200) {
                     if (res.data.flag) {
+                        setStep(1)
+                    } else {
                         toast({
                             title: "无法登录",
-                            description: "当前邮箱已被注册",
+                            description: "当前账户未注册",
                         })
-                    } else {
-                        setStep(1)
                     }
                 }
                 setIsLoading(false)
@@ -79,23 +79,27 @@ export default function UserRegisterPage() {
                 })
                 return
             }
-            const pwd = Md5.hashStr(password)
-            POST(APIS.REGISTER_API, {
+            setIsLoading(true)
+            let body = {
                 account: account,
-                password: pwd
-            }).then(res => {
+                password: Md5.hashStr(password),
+            }
+            POST(APIS.LOGIN_API, body).then(res => {
+                console.log(res)
                 if (res.code == 200) {
+                    router.push('/ai')
+                    localStorage.setItem("Authorization", res.data.token)
                     toast({
-                        title: "注册成功",
-                        description: "注册方式为" + res.data.mode,
+                        title: "登录成功",
+                        description: "",
                     })
-                    router.push("/auth/login")
-                }else {
+                } else {
                     toast({
-                        title: "注册失败",
+                        title: "登录失败",
                         description: res.msg,
                     })
                 }
+                setIsLoading(false)
             })
         }
     }
@@ -121,13 +125,13 @@ export default function UserRegisterPage() {
             <div
                 className="container relative hidden h-[100vh] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 <Link
-                    href="/auth/login"
+                    href="/ai/auth/register"
                     className={cn(
                         buttonVariants({variant: "ghost"}),
                         "absolute right-4 top-4 md:right-8 md:top-8"
                     )}
                 >
-                    登录
+                    注册
                 </Link>
                 <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
                     <div className="absolute inset-0 bg-zinc-900"/>
@@ -147,10 +151,10 @@ export default function UserRegisterPage() {
                         welcome etovGPT
                     </div>
                     <div className={"relative z-20"}>
-                        <div className={"etov_bg action-hover"} onClick={()=>router.push("/")}>etov</div>
+                        <div className={"etov_bg action-hover"} onClick={() => router.push("/ai")}>etov</div>
                     </div>
                     <div className="relative z-20 mt-auto">
-                        <blockquote className="space-y-2">
+                    <blockquote className="space-y-2">
                             <p className="">
                                 &ldquo;Learning to use GPT can quickly improve your learning and productivity!&rdquo;
                             </p>
@@ -162,15 +166,15 @@ export default function UserRegisterPage() {
                     <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                         <div className="flex flex-col space-y-2 text-center">
                             <h1 className="text-2xl font-semibold tracking-tight">
-                                注册账户，属于你的etov
+                                欢迎回来
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                请在下方输入您的手机或电子邮件以注册账户
+                                请在下方输入您的电子邮件以登录账户
                             </p>
                         </div>
                         {/*<UserAuthForm />*/}
                         <div className={cn("grid gap-6")}>
-                            <form onSubmit={onContinue}>
+                            <form onSubmit={onLoginContinue}>
                                 <div className="grid gap-2">
                                     <div className="grid gap-1">
                                         <Label className="sr-only" htmlFor="email">
@@ -178,12 +182,12 @@ export default function UserRegisterPage() {
                                         </Label>
                                         <Input
                                             id="email"
-                                            placeholder="您的手机号或邮箱地址"
-                                            type="phone"
+                                            placeholder="etov@example.com"
+                                            type="email"
                                             autoCapitalize="none"
                                             autoComplete="email"
                                             autoCorrect="off"
-                                            disabled={isLoading}
+                                            disabled={isLoading || step == 1}
                                             value={account}
                                             onChange={e => setAccount(e.target.value)}
                                         />
@@ -214,7 +218,7 @@ export default function UserRegisterPage() {
                                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                                         )}
                                         {
-                                            step == 0 ? (<div>继续</div>) : (<div>注册</div>)
+                                            step == 0 ? (<div>继续</div>) : (<div>使用邮箱登录</div>)
                                         }
                                     </Button>
                                 </div>
