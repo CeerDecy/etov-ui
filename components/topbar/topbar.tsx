@@ -84,7 +84,7 @@ export const TopBar: React.FC<Props> = ({avatar}) => {
                 <Button variant="link">
                     <div className={"topbar-username"}>
                         {userInfo.nickName == "" ?
-                            <div onClick={() => router.push("/auth/login")}>登录</div>
+                            <div onClick={() => router.push("/ai/auth/login")}>登录</div>
                             : <div>{userInfo.nickName}</div>}
                     </div>
                 </Button>

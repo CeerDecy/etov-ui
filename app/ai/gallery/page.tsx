@@ -28,6 +28,7 @@ export default function Gallery() {
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
+            document.title = "gallery"
             getTools()
         }
     }, []);

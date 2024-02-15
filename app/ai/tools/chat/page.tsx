@@ -47,6 +47,7 @@ export default function Chat() {
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
+            document.title = "ChatGPT"
             getSupportEngine()
         }
     }, []);

@@ -24,7 +24,12 @@ export default function RootLayout({
         <head>
             <script async src="https://www.googletagmanager.com/gtag/js?id=G-KH6HZW4TYJ"></script>
             <Script id={"analytics"}>
-                {"window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-KH6HZW4TYJ');"}
+                {
+                    "window.dataLayer = window.dataLayer || [];\n" +
+                    "function gtag(){dataLayer.push(arguments);}\n" +
+                    "gtag('js', new Date());\n" +
+                    "gtag('config', 'G-KH6HZW4TYJ');"
+                }
             </Script>
             <title>etov</title>
             <script async
