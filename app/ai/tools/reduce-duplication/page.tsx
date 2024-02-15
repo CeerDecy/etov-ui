@@ -38,6 +38,7 @@ export default function ReduceDuplication() {
         if (!initialized.current) {
             getSupportEngine()
             initialized.current = true
+            document.title = "论文降重"
         }
     }, []);
     const modeChange = (val: string) => {
