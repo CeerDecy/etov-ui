@@ -22,6 +22,7 @@ export default function RootLayout({
     return (
         <html lang="en">
         <head>
+            <base href="/ai/"/>
             <script async src="https://www.googletagmanager.com/gtag/js?id=G-KH6HZW4TYJ"></script>
             <Script id={"analytics"}>
                 {

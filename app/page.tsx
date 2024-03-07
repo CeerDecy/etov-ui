@@ -11,7 +11,7 @@ export default function Home() {
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
-            router.push("/gallery")
+            router.push("/ai/gallery")
         }
     }, []);
     return (

@@ -7,6 +7,11 @@ const nextConfig = {
                 hostname: '127.0.0.1',
                 port: '',
                 pathname: '/api/static/*',
+            },{
+                protocol: 'http',
+                hostname: 'localhost',
+                port: '',
+                pathname: '/api/static/*',
             },
         ],
     },
