@@ -1,0 +1,33 @@
+.h-80vh{
+    height: 30vh;
+}
+
+.tool_content {
+    white-space: pre-line;
+    height:80% ;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.top_content {
+    height:20% ;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.tool_main{
+    height:100%;
+}
+
+.root {
+    height: 100vh;
+}
+
+.w-50p {
+    width: 50%;
+}
+
+.min-title {
+    font-size: 18px;
+    font-weight: bolder;
+}

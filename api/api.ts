@@ -15,6 +15,7 @@ export const APIS = {
     // Tool
     GET_PUBLIC_TOOLS: "/api/tool/get/public",
     PUSH_MSG_REDUCE_DUPLICATION: "/api/tool/reduce-duplication",
+    PUSH_MSG_TRANSLATOR: "/api/tool/translator",
 
     // Engine
     GET_SUPPORT_ENGINES: "/api/engine/get/support",
