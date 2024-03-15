@@ -41,7 +41,7 @@ export default function Translator() {
         if (!initialized.current) {
             getSupportEngine()
             initialized.current = true
-            document.title = "论文降重"
+            document.title = "AI翻译"
         }
     }, []);
     const modeChange = (val: string) => {
@@ -162,7 +162,7 @@ export default function Translator() {
                         </div>
                     </div>
                     <div className={"flex flex-row items-center justify-between mt-2"}>
-                        <Textarea className={"h-[200px]"} placeholder={"在此输入您想降重的段落"} value={inputValue}
+                        <Textarea className={"h-[200px]"} placeholder={"在此输入您想翻译的段落"} value={inputValue}
                                   onChange={e => {
                                       setInputValue(e.target.value);
                                   }}/>
