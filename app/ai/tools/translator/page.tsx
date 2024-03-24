@@ -10,7 +10,7 @@ import {
     SelectContent,
     SelectValue,
     SelectGroup,
-    SelectItem
+    SelectItem, SelectLabel
 } from "@/components/ui/select";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import "./index.css"
@@ -29,6 +29,7 @@ type Engine = {
 
 export default function Translator() {
     const [engines, setEngines] = useState(Array<Engine>)
+    const [customs, setCustoms] = useState(Array<Engine>)
     const [inputValue, setInputValue] = useState("");
     const [content, setContent] = useState("");
     const initialized = useRef(false)
@@ -62,8 +63,8 @@ export default function Translator() {
 
     const getSupportEngine = () => {
         GET(APIS.GET_SUPPORT_ENGINES, {}).then(res => {
-            console.log(res)
             setEngines(res.data.platform)
+            setCustoms(res.data.custom)
         })
     }
 
@@ -150,7 +151,15 @@ export default function Translator() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
+                                            <SelectLabel>官方</SelectLabel>
                                             {engines.map((engine, index) => {
+                                                return <SelectItem key={index}
+                                                                   value={engine.id + ""}>{engine.name}</SelectItem>
+                                            })}
+                                        </SelectGroup>
+                                        <SelectGroup>
+                                            <SelectLabel>自定义</SelectLabel>
+                                            {customs.map((engine, index) => {
                                                 return <SelectItem key={index}
                                                                    value={engine.id + ""}>{engine.name}</SelectItem>
                                             })}

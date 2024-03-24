@@ -15,7 +15,15 @@ import {useToast} from "@/components/ui/use-toast";
 import {useRouter, useSearchParams} from "next/navigation";
 import {Viewer} from '@bytemd/react'
 import 'bytemd/dist/index.css'
-import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 
 const GPT = "GPT"
 const You = "You"
@@ -34,6 +42,7 @@ type Engine = {
 export default function Chat() {
     const [contents, setContents] = useState(Array<Message>());
     const [engines, setEngines] = useState(Array<Engine>)
+    const [customs, setCustoms] = useState(Array<Engine>)
     const [inputValue, setInputValue] = useState("");
     const chatCardRef = useRef(null);
     const scrollRef = useRef(null);
@@ -56,6 +65,7 @@ export default function Chat() {
         GET(APIS.GET_SUPPORT_ENGINES, {}).then(res => {
             if (res.code === 200) {
                 setEngines(res.data.platform)
+                setCustoms(res.data.custom)
                 getChats()
             } else {
                 toast({
@@ -226,7 +236,15 @@ export default function Chat() {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
+                                    <SelectLabel>官方</SelectLabel>
                                     {engines.map((engine, index) => {
+                                        return <SelectItem key={index}
+                                                           value={engine.id + ""}>{engine.name}</SelectItem>
+                                    })}
+                                </SelectGroup>
+                                <SelectGroup>
+                                    <SelectLabel>自定义</SelectLabel>
+                                    {customs.map((engine, index) => {
                                         return <SelectItem key={index}
                                                            value={engine.id + ""}>{engine.name}</SelectItem>
                                     })}

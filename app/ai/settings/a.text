@@ -1,0 +1,4 @@
+setEditModel("")
+        setEditHost("https://api.openai.com/v1")
+        setEditToken("")
+        setEditName("")
