@@ -1,0 +1,16 @@
+.container {
+    padding-left: 20vw;
+    padding-right: 20vw;
+}
+
+.child {
+    width: 100%;
+}
+
+.name {
+    width: 20%;
+}
+
+.text {
+    color: #acacb2;
+}

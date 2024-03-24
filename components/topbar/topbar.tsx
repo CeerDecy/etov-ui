@@ -105,15 +105,17 @@ export const TopBar: React.FC<Props> = ({avatar}) => {
                         <DropdownMenuLabel>欢迎来到etov</DropdownMenuLabel>
                         <DropdownMenuSeparator/>
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                个人中心
-                                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                钱包
-                                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            {/*<DropdownMenuItem>*/}
+                            {/*    个人中心*/}
+                            {/*    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>*/}
+                            {/*</DropdownMenuItem>*/}
+                            {/*<DropdownMenuItem>*/}
+                            {/*    钱包*/}
+                            {/*    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>*/}
+                            {/*</DropdownMenuItem>*/}
+                            <DropdownMenuItem onClick={()=>{
+                                    router.push("/ai/settings")
+                                }}>
                                 设置
                                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                             </DropdownMenuItem>
@@ -124,10 +126,16 @@ export const TopBar: React.FC<Props> = ({avatar}) => {
                                 <DropdownMenuSubTrigger>工具箱</DropdownMenuSubTrigger>
                                 <DropdownMenuPortal>
                                     <DropdownMenuSubContent>
-                                        <DropdownMenuItem>Email</DropdownMenuItem>
-                                        <DropdownMenuItem>Message</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={()=>{
+                                            router.push("/ai/tools/chat?model=1")
+                                        }}>ChatGPT</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={()=>{
+                                            router.push("/ai/tools/translator")
+                                        }}>AI翻译</DropdownMenuItem>
                                         <DropdownMenuSeparator/>
-                                        <DropdownMenuItem>More...</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={()=>{
+                                            router.push("/ai/tools/gallery")
+                                        }}>更多...</DropdownMenuItem>
                                     </DropdownMenuSubContent>
                                 </DropdownMenuPortal>
                             </DropdownMenuSub>
